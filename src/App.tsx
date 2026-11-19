@@ -7,10 +7,15 @@ import { Loader } from "./components/Loader";
 import { BrandMark } from "./components/BrandMark";
 import { StationExperience } from "./components/StationExperience";
 import { PumpExperience } from "./components/PumpExperience";
+import FuelVideo from "./sections/FuelVideo";
 
 export default function App() {
   const { scrollYProgress } = useScroll();
-  const railProgress = useSpring(scrollYProgress, { stiffness: 90, damping: 28, mass: 0.32 });
+  const railProgress = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 28,
+    mass: 0.32,
+  });
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -30,13 +35,16 @@ export default function App() {
 
       <div className="scroll-rail" aria-hidden="true">
         <span>01</span>
-        <div><motion.i style={{ scaleY: railProgress, transformOrigin: "top" }} /></div>
+        <div>
+          <motion.i style={{ scaleY: railProgress, transformOrigin: "top" }} />
+        </div>
         <span>05</span>
       </div>
 
       <main>
         <StationExperience />
         <FuelBridgeSection />
+        <FuelVideo />
         <PumpExperience />
         <NetworkSection />
         <FooterSection />
@@ -49,14 +57,22 @@ function FuelBridgeSection() {
   return (
     <section className="fuel-bridge" id="network">
       <div className="fuel-bridge__inner">
-        <div className="fuel-bridge__eyebrow">JS FUEL / ONE FORECOURT. FOUR ENERGY CHOICES.</div>
-        <h2>Fuel for every kind of <span>movement.</span></h2>
+        <div className="fuel-bridge__eyebrow">
+          JS FUEL / ONE FORECOURT. FOUR ENERGY CHOICES.
+        </div>
+        <h2>
+          Fuel for every kind of <span>movement.</span>
+        </h2>
         <p>
-          Petrol, Diesel, CNG and LPG come together under one recognisable JS Fuel experience — clear,
-          accessible and built around the way people actually move.
+          Petrol, Diesel, CNG and LPG come together under one recognisable JS
+          Fuel experience — clear, accessible and built around the way people
+          actually move.
         </p>
         <div className="fuel-bridge__fuels" aria-label="Fuel types">
-          <span>PETROL</span><span>DIESEL</span><span>CNG</span><span>LPG</span>
+          <span>PETROL</span>
+          <span>DIESEL</span>
+          <span>CNG</span>
+          <span>LPG</span>
         </div>
       </div>
     </section>
@@ -65,7 +81,10 @@ function FuelBridgeSection() {
 
 function NetworkSection() {
   const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 85%", "end 30%"] });
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 85%", "end 30%"],
+  });
   const titleY = useTransform(scrollYProgress, [0, 0.45], [52, 0]);
   const titleOpacity = useTransform(scrollYProgress, [0, 0.28], [0, 1]);
   const cardsY = useTransform(scrollYProgress, [0.1, 0.62], [70, 0]);
@@ -74,29 +93,43 @@ function NetworkSection() {
   return (
     <section ref={ref} className="network-section" id="experience">
       <div className="network-section__inner">
-        <motion.div className="network-section__heading" style={{ y: titleY, opacity: titleOpacity }}>
+        <motion.div
+          className="network-section__heading"
+          style={{ y: titleY, opacity: titleOpacity }}
+        >
           <span>THE JS FUEL EXPERIENCE</span>
           <h2>A better stop between where you are and where you are going.</h2>
         </motion.div>
 
-        <motion.div className="network-cards" style={{ y: cardsY, opacity: cardsOpacity }}>
+        <motion.div
+          className="network-cards"
+          style={{ y: cardsY, opacity: cardsOpacity }}
+        >
           <article>
             <Gauge size={23} strokeWidth={1.6} />
             <span>01</span>
             <h3>Clear fueling</h3>
-            <p>Readable dispensers, familiar fuel choices and an easy forecourt flow.</p>
+            <p>
+              Readable dispensers, familiar fuel choices and an easy forecourt
+              flow.
+            </p>
           </article>
           <article>
             <Zap size={23} strokeWidth={1.6} />
             <span>02</span>
             <h3>Built for movement</h3>
-            <p>A station experience designed around quick stops and confident onward journeys.</p>
+            <p>
+              A station experience designed around quick stops and confident
+              onward journeys.
+            </p>
           </article>
           <article>
             <ShieldCheck size={23} strokeWidth={1.6} />
             <span>03</span>
             <h3>One identity</h3>
-            <p>Consistent JS Fuel branding from the canopy to the dispenser face.</p>
+            <p>
+              Consistent JS Fuel branding from the canopy to the dispenser face.
+            </p>
           </article>
         </motion.div>
       </div>
@@ -109,7 +142,11 @@ function FooterSection() {
     <footer className="site-footer" id="contact">
       <div className="site-footer__top">
         <BrandMark />
-        <p>Petrol · Diesel · CNG · LPG<br />Energy that keeps the next move within reach.</p>
+        <p>
+          Petrol · Diesel · CNG · LPG
+          <br />
+          Energy that keeps the next move within reach.
+        </p>
       </div>
 
       <div className="site-footer__grid">

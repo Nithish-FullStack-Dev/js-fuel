@@ -1,5 +1,5 @@
-import { Suspense, useMemo, useRef } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Suspense, useMemo } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import { AdaptiveDpr, Preload } from "@react-three/drei";
 import * as THREE from "three";
 import type { MutableRefObject } from "react";
@@ -11,39 +11,56 @@ type PumpCanvasProps = {
 
 function PumpEnvironment() {
   const { scene } = useThree();
-  const fog = useMemo(() => new THREE.Fog("#ebe6df", 18, 35), []);
 
-  useFrame(() => {
-    if (scene.fog !== fog) scene.fog = fog;
-  });
+  useMemo(() => {
+    scene.fog = new THREE.Fog("#ebe6df", 19, 38);
+  }, [scene]);
 
   return (
     <>
-      <ambientLight intensity={1.6} />
-      <hemisphereLight args={["#ffffff", "#cabfb5", 1.8]} />
-      <directionalLight position={[6, 10, 8]} intensity={3.2} color="#ffffff" />
-      <directionalLight position={[-7, 4, 5]} intensity={1.2} color="#f6d7d9" />
-      <pointLight position={[5, 1, 5]} intensity={2.2} color="#ffffff" distance={18} />
+      <ambientLight intensity={1.7} />
+
+      <hemisphereLight args={["#ffffff", "#cabfb5", 1.9]} />
+
+      <directionalLight position={[6, 10, 8]} intensity={3.4} color="#ffffff" />
+
+      <directionalLight position={[-7, 5, 5]} intensity={1.3} color="#f7dedc" />
+
+      <directionalLight
+        position={[0, 2, -5]}
+        intensity={0.85}
+        color="#ffffff"
+      />
+
+      <pointLight
+        position={[5, 2, 6]}
+        intensity={2}
+        color="#ffffff"
+        distance={20}
+      />
     </>
   );
 }
 
 function GroundShadow({ progressRef }: PumpCanvasProps) {
-  const mesh = useRef<THREE.Mesh>(null);
-  const material = useMemo(() => new THREE.MeshBasicMaterial({ color: "#211711", transparent: true, opacity: 0.11, depthWrite: false }), []);
-
-  useFrame(() => {
-    const move = THREE.MathUtils.smoothstep(progressRef.current, 0.24, 0.72);
-    material.opacity = THREE.MathUtils.lerp(0.14, 0.08, move);
-    if (!mesh.current) return;
-    mesh.current.position.x = THREE.MathUtils.lerp(0.18, 2.72, move);
-    mesh.current.scale.x = THREE.MathUtils.lerp(1.8, 1.28, move);
-    mesh.current.scale.y = THREE.MathUtils.lerp(0.72, 0.58, move);
-  });
+  const material = useMemo(
+    () =>
+      new THREE.MeshBasicMaterial({
+        color: "#211711",
+        transparent: true,
+        opacity: 0.09,
+        depthWrite: false,
+      }),
+    [],
+  );
 
   return (
-    <mesh ref={mesh} rotation={[-Math.PI / 2, 0, 0]} position={[0.18, -3.31, 0.18]} scale={[1.8, 0.72, 1]}>
-      <circleGeometry args={[1.6, 64]} />
+    <mesh
+      rotation={[-Math.PI / 2, 0, 0]}
+      position={[0, -3.02, 0.1]}
+      scale={[1.7, 0.6, 1]}
+    >
+      <circleGeometry args={[1.45, 64]} />
       <primitive object={material} attach="material" />
     </mesh>
   );
@@ -53,15 +70,26 @@ export function PumpCanvas({ progressRef }: PumpCanvasProps) {
   return (
     <Canvas
       className="pump-canvas"
-      dpr={[1, 1.7]}
-      camera={{ position: [0, 0.45, 9.7], fov: 38, near: 0.1, far: 60 }}
-      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+      dpr={[1, 1.75]}
+      camera={{
+        position: [0, 0.05, 10.8],
+        fov: 38,
+        near: 0.1,
+        far: 60,
+      }}
+      gl={{
+        antialias: true,
+        alpha: true,
+        powerPreference: "high-performance",
+      }}
     >
       <PumpEnvironment />
+
       <Suspense fallback={null}>
         <DispenserModel progressRef={progressRef} />
         <GroundShadow progressRef={progressRef} />
       </Suspense>
+
       <AdaptiveDpr pixelated />
       <Preload all />
     </Canvas>

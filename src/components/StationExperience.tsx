@@ -1,5 +1,10 @@
 import { useEffect, useRef } from "react";
-import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "motion/react";
 import { ExperienceCanvas } from "./ExperienceCanvas";
 
 type FuelStep = {
@@ -59,10 +64,15 @@ const fuelSteps: FuelStep[] = [
 export function StationExperience() {
   const sectionRef = useRef<HTMLElement>(null);
   const progressRef = useRef(0);
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end end"] });
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
   useEffect(() => {
     progressRef.current = scrollYProgress.get();
-    return scrollYProgress.on("change", (value) => { progressRef.current = value; });
+    return scrollYProgress.on("change", (value) => {
+      progressRef.current = value;
+    });
   }, [scrollYProgress]);
 
   return (
@@ -79,13 +89,18 @@ export function StationExperience() {
         {fuelSteps.map((step) => (
           <FuelOverlay key={step.id} step={step} progress={scrollYProgress} />
         ))}
-
       </div>
     </section>
   );
 }
 
-function FuelOverlay({ step, progress }: { step: FuelStep; progress: MotionValue<number> }) {
+function FuelOverlay({
+  step,
+  progress,
+}: {
+  step: FuelStep;
+  progress: MotionValue<number>;
+}) {
   const [start, end] = step.hold;
   const span = end - start;
 
@@ -93,37 +108,126 @@ function FuelOverlay({ step, progress }: { step: FuelStep; progress: MotionValue
   // Copy fully exits before the next camera move starts.
   const veil = useTransform(
     progress,
-    [start + span * 0.08, start + span * 0.20, end - span * 0.22, end - span * 0.06],
+    [
+      start + span * 0.08,
+      start + span * 0.2,
+      end - span * 0.22,
+      end - span * 0.06,
+    ],
     [0, 1, 1, 0],
   );
-  const metaOpacity = useTransform(progress, [start + span * 0.20, start + span * 0.31, end - span * 0.28, end - span * 0.16], [0, 1, 1, 0]);
-  const titleOpacity = useTransform(progress, [start + span * 0.29, start + span * 0.42, end - span * 0.25, end - span * 0.13], [0, 1, 1, 0]);
-  const bodyOpacity = useTransform(progress, [start + span * 0.39, start + span * 0.52, end - span * 0.22, end - span * 0.10], [0, 1, 1, 0]);
-  const noteOpacity = useTransform(progress, [start + span * 0.49, start + span * 0.61, end - span * 0.20, end - span * 0.08], [0, 1, 1, 0]);
+  const metaOpacity = useTransform(
+    progress,
+    [
+      start + span * 0.2,
+      start + span * 0.31,
+      end - span * 0.28,
+      end - span * 0.16,
+    ],
+    [0, 1, 1, 0],
+  );
+  const titleOpacity = useTransform(
+    progress,
+    [
+      start + span * 0.29,
+      start + span * 0.42,
+      end - span * 0.25,
+      end - span * 0.13,
+    ],
+    [0, 1, 1, 0],
+  );
+  const bodyOpacity = useTransform(
+    progress,
+    [
+      start + span * 0.39,
+      start + span * 0.52,
+      end - span * 0.22,
+      end - span * 0.1,
+    ],
+    [0, 1, 1, 0],
+  );
+  const noteOpacity = useTransform(
+    progress,
+    [
+      start + span * 0.49,
+      start + span * 0.61,
+      end - span * 0.2,
+      end - span * 0.08,
+    ],
+    [0, 1, 1, 0],
+  );
 
   const contentX = useTransform(
     progress,
-    [start + span * 0.18, start + span * 0.42, end - span * 0.18, end - span * 0.06],
+    [
+      start + span * 0.18,
+      start + span * 0.42,
+      end - span * 0.18,
+      end - span * 0.06,
+    ],
     step.side === "left" ? [-54, 0, 0, -30] : [54, 0, 0, 30],
   );
-  const metaY = useTransform(progress, [start + span * 0.18, start + span * 0.35], [20, 0]);
-  const titleY = useTransform(progress, [start + span * 0.27, start + span * 0.45], [42, 0]);
-  const bodyY = useTransform(progress, [start + span * 0.37, start + span * 0.55], [48, 0]);
-  const noteY = useTransform(progress, [start + span * 0.47, start + span * 0.63], [34, 0]);
-  const lineScale = useTransform(progress, [start + span * 0.21, start + span * 0.42], [0, 1]);
+  const metaY = useTransform(
+    progress,
+    [start + span * 0.18, start + span * 0.35],
+    [20, 0],
+  );
+  const titleY = useTransform(
+    progress,
+    [start + span * 0.27, start + span * 0.45],
+    [42, 0],
+  );
+  const bodyY = useTransform(
+    progress,
+    [start + span * 0.37, start + span * 0.55],
+    [48, 0],
+  );
+  const noteY = useTransform(
+    progress,
+    [start + span * 0.47, start + span * 0.63],
+    [34, 0],
+  );
+  const lineScale = useTransform(
+    progress,
+    [start + span * 0.21, start + span * 0.42],
+    [0, 1],
+  );
 
   return (
-    <div className={`fuel-overlay fuel-overlay--${step.side}`}>
-      <motion.div className="fuel-overlay__blur" style={{ opacity: veil }} aria-hidden="true" />
+    <div
+      className={`fuel-overlay fuel-overlay--${step.side} border-2 border-white`}
+    >
+      <motion.div
+        className="fuel-overlay__blur"
+        style={{ opacity: veil }}
+        aria-hidden="true"
+      />
       <motion.div className="fuel-overlay__content" style={{ x: contentX }}>
-        <motion.div className="fuel-overlay__meta" style={{ opacity: metaOpacity, y: metaY }}>
+        <motion.div
+          className="fuel-overlay__meta"
+          style={{ opacity: metaOpacity, y: metaY }}
+        >
           <span>{step.number}</span>
-          <motion.i style={{ scaleX: lineScale, transformOrigin: step.side === "left" ? "left" : "right" }} />
+          <motion.i
+            style={{
+              scaleX: lineScale,
+              transformOrigin: step.side === "left" ? "left" : "right",
+            }}
+          />
           <strong>{step.fuel}</strong>
         </motion.div>
-        <motion.h2 style={{ opacity: titleOpacity, y: titleY }}>{step.title}</motion.h2>
-        <motion.p style={{ opacity: bodyOpacity, y: bodyY }}>{step.body}</motion.p>
-        <motion.div className="fuel-overlay__note" style={{ opacity: noteOpacity, y: noteY }}>{step.note}</motion.div>
+        <motion.h2 style={{ opacity: titleOpacity, y: titleY }}>
+          {step.title}
+        </motion.h2>
+        <motion.p style={{ opacity: bodyOpacity, y: bodyY }}>
+          {step.body}
+        </motion.p>
+        <motion.div
+          className="fuel-overlay__note"
+          style={{ opacity: noteOpacity, y: noteY }}
+        >
+          {step.note}
+        </motion.div>
       </motion.div>
     </div>
   );
