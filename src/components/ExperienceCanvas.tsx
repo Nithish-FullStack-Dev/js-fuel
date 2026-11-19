@@ -16,71 +16,181 @@ type Shot = {
   fov: number;
 };
 
-// Every repeated pair is an intentional camera pause.
-// Movement only happens in the gaps between pump hold ranges.
+const INTRO_DURATION = 4.2;
+
+const INTRO_SHOT: Shot = {
+  p: 0,
+  position: [0, 15.5, 24.5],
+  target: [0, -2.2, 0.4],
+  fov: 48,
+};
+
 const shots: Shot[] = [
-  // Opening: full station, absolutely no content.
-  { p: 0.0, position: [0, 0.72, 16.1], target: [0, -0.72, 0.62], fov: 41 },
-  { p: 0.08, position: [0, 0.72, 16.1], target: [0, -0.72, 0.62], fov: 41 },
-
-  // One direct motion to Petrol.
-  { p: 0.16, position: [-5.52, -1.22, 6.72], target: [-4.12, -1.78, 2.12], fov: 30.5 },
-  { p: 0.285, position: [-5.52, -1.22, 6.72], target: [-4.12, -1.78, 2.12], fov: 30.5 },
-
-  // One direct motion to Diesel.
-  { p: 0.36, position: [-3.03, -1.24, 6.66], target: [-1.72, -1.8, 2.12], fov: 30.5 },
-  { p: 0.485, position: [-3.03, -1.24, 6.66], target: [-1.72, -1.8, 2.12], fov: 30.5 },
-
-  // Cross once to CNG on the right side.
-  { p: 0.56, position: [3.03, -1.24, 6.66], target: [1.72, -1.8, 2.12], fov: 30.5 },
-  { p: 0.685, position: [3.03, -1.24, 6.66], target: [1.72, -1.8, 2.12], fov: 30.5 },
-
-  // One direct motion to LPG.
-  { p: 0.76, position: [5.52, -1.22, 6.72], target: [4.12, -1.78, 2.12], fov: 30.5 },
-  { p: 1.0, position: [5.52, -1.22, 6.72], target: [4.12, -1.78, 2.12], fov: 30.5 },
+  {
+    p: 0,
+    position: [0, 1.18, 20.5],
+    target: [0, -0.78, 0.62],
+    fov: 43,
+  },
+  {
+    p: 0.06,
+    position: [0, 1.18, 20.5],
+    target: [0, -0.78, 0.62],
+    fov: 43,
+  },
+  {
+    p: 0.12,
+    position: [-3.25, -0.9, 7.7],
+    target: [-2.4, -1.68, 2.05],
+    fov: 37,
+  },
+  {
+    p: 0.3,
+    position: [-3.25, -0.9, 7.7],
+    target: [-2.4, -1.68, 2.05],
+    fov: 37,
+  },
+  {
+    p: 0.36,
+    position: [-1.05, -0.92, 7.7],
+    target: [-0.48, -1.68, 2.05],
+    fov: 37,
+  },
+  {
+    p: 0.54,
+    position: [-1.05, -0.92, 7.7],
+    target: [-0.48, -1.68, 2.05],
+    fov: 37,
+  },
+  {
+    p: 0.6,
+    position: [1.05, -0.92, 7.7],
+    target: [0.48, -1.68, 2.05],
+    fov: 37,
+  },
+  {
+    p: 0.78,
+    position: [1.05, -0.92, 7.7],
+    target: [0.48, -1.68, 2.05],
+    fov: 37,
+  },
+  {
+    p: 0.84,
+    position: [3.25, -0.9, 7.7],
+    target: [2.4, -1.68, 2.05],
+    fov: 37,
+  },
+  {
+    p: 1,
+    position: [3.25, -0.9, 7.7],
+    target: [2.4, -1.68, 2.05],
+    fov: 37,
+  },
 ];
 
-function smoothstep01(t: number) {
-  const x = THREE.MathUtils.clamp(t, 0, 1);
-  return x * x * (3 - 2 * x);
+const shotPositions = shots.map((shot) => new THREE.Vector3(...shot.position));
+
+const shotTargets = shots.map((shot) => new THREE.Vector3(...shot.target));
+
+const introPosition = new THREE.Vector3(...INTRO_SHOT.position);
+
+const introTarget = new THREE.Vector3(...INTRO_SHOT.target);
+
+function clamp01(value: number) {
+  return THREE.MathUtils.clamp(value, 0, 1);
 }
 
-function interpolateShot(progress: number) {
-  const p = THREE.MathUtils.clamp(progress, 0, 1);
-  let a = shots[0];
-  let b = shots[shots.length - 1];
+function smoothstep(value: number) {
+  const t = clamp01(value);
+  return t * t * (3 - 2 * t);
+}
+
+function smootherstep(value: number) {
+  const t = clamp01(value);
+  return t * t * t * (t * (t * 6 - 15) + 10);
+}
+
+function interpolateShot(
+  progress: number,
+  position: THREE.Vector3,
+  target: THREE.Vector3,
+) {
+  const p = clamp01(progress);
+
+  let index = shots.length - 2;
 
   for (let i = 0; i < shots.length - 1; i++) {
-    if (p >= shots[i].p && p <= shots[i + 1].p) {
-      a = shots[i];
-      b = shots[i + 1];
+    if (p <= shots[i + 1].p) {
+      index = i;
       break;
     }
   }
 
-  const span = Math.max(0.00001, b.p - a.p);
-  const t = smoothstep01((p - a.p) / span);
+  const from = shots[index];
+  const to = shots[index + 1];
 
-  return {
-    position: new THREE.Vector3(...a.position).lerp(new THREE.Vector3(...b.position), t),
-    target: new THREE.Vector3(...a.target).lerp(new THREE.Vector3(...b.target), t),
-    fov: THREE.MathUtils.lerp(a.fov, b.fov, t),
-  };
+  const duration = Math.max(0.00001, to.p - from.p);
+
+  const t = smoothstep((p - from.p) / duration);
+
+  position.copy(shotPositions[index]).lerp(shotPositions[index + 1], t);
+
+  target.copy(shotTargets[index]).lerp(shotTargets[index + 1], t);
+
+  return THREE.MathUtils.lerp(from.fov, to.fov, t);
 }
 
 function CameraRig({ progressRef }: ExperienceCanvasProps) {
-  const { camera } = useThree();
+  const { camera, size } = useThree();
+
+  const position = useRef(new THREE.Vector3());
+
   const target = useRef(new THREE.Vector3());
 
-  useFrame(() => {
-    const shot = interpolateShot(progressRef.current);
+  const introElapsed = useRef(0);
 
-    // Direct assignment is intentional: no delayed camera catch-up during text holds.
-    camera.position.copy(shot.position);
-    target.current.copy(shot.target);
+  useFrame((_, delta) => {
+    const progress = clamp01(progressRef.current);
 
-    if (camera instanceof THREE.PerspectiveCamera && Math.abs(camera.fov - shot.fov) > 0.001) {
-      camera.fov = shot.fov;
+    const baseFov = interpolateShot(progress, position.current, target.current);
+
+    introElapsed.current = Math.min(
+      introElapsed.current + Math.min(delta, 0.1),
+      INTRO_DURATION,
+    );
+
+    const introProgress = smootherstep(introElapsed.current / INTRO_DURATION);
+
+    const scrollRelease = smoothstep(progress / 0.06);
+
+    const introWeight = (1 - introProgress) * (1 - scrollRelease);
+
+    position.current.lerp(introPosition, introWeight);
+
+    target.current.lerp(introTarget, introWeight);
+
+    const animatedFov = THREE.MathUtils.lerp(
+      baseFov,
+      INTRO_SHOT.fov,
+      introWeight,
+    );
+
+    const aspect = size.width / Math.max(size.height, 1);
+
+    const responsiveFov =
+      aspect < 0.8
+        ? Math.min(animatedFov + 17, 72)
+        : aspect < 1.2
+          ? Math.min(animatedFov + 8, 64)
+          : animatedFov;
+
+    camera.position.copy(position.current);
+
+    if (
+      camera instanceof THREE.PerspectiveCamera &&
+      Math.abs(camera.fov - responsiveFov) > 0.001
+    ) {
+      camera.fov = responsiveFov;
       camera.updateProjectionMatrix();
     }
 
@@ -91,21 +201,44 @@ function CameraRig({ progressRef }: ExperienceCanvasProps) {
 }
 
 function StationEnvironment() {
-  const fog = useMemo(() => new THREE.Fog("#07090c", 23, 52), []);
+  const fog = useMemo(() => new THREE.Fog("#07090c", 26, 60), []);
+
   const { scene } = useThree();
 
   useFrame(() => {
-    if (scene.fog !== fog) scene.fog = fog;
+    if (scene.fog !== fog) {
+      scene.fog = fog;
+    }
   });
 
   return (
     <>
       <color attach="background" args={["#07090c"]} />
-      <ambientLight intensity={1.0} />
+
+      <ambientLight intensity={1} />
+
       <hemisphereLight args={["#eef4ff", "#19070b", 1.3]} />
-      <directionalLight position={[7, 12, 10]} intensity={2.35} color="#ffffff" />
-      <spotLight position={[-9, 7, 8]} angle={0.58} penumbra={0.86} intensity={2.6} color="#d51935" />
-      <pointLight position={[8, 1, 4]} intensity={1.3} color="#ffffff" distance={26} />
+
+      <directionalLight
+        position={[7, 12, 10]}
+        intensity={2.35}
+        color="#ffffff"
+      />
+
+      <spotLight
+        position={[-9, 7, 8]}
+        angle={0.58}
+        penumbra={0.86}
+        intensity={2.6}
+        color="#d51935"
+      />
+
+      <pointLight
+        position={[8, 1, 4]}
+        intensity={1.3}
+        color="#ffffff"
+        distance={26}
+      />
     </>
   );
 }
@@ -114,11 +247,14 @@ function Scene({ progressRef }: ExperienceCanvasProps) {
   return (
     <>
       <StationEnvironment />
+
       <Suspense fallback={null}>
         <StationModel />
+        <CameraRig progressRef={progressRef} />
       </Suspense>
-      <CameraRig progressRef={progressRef} />
+
       <AdaptiveDpr pixelated />
+
       <Preload all />
     </>
   );
@@ -129,8 +265,17 @@ export function ExperienceCanvas({ progressRef }: ExperienceCanvasProps) {
     <Canvas
       className="experience-canvas"
       dpr={[1, 1.6]}
-      camera={{ position: [0, 0.72, 16.1], fov: 41, near: 0.1, far: 100 }}
-      gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
+      camera={{
+        position: INTRO_SHOT.position,
+        fov: INTRO_SHOT.fov,
+        near: 0.1,
+        far: 120,
+      }}
+      gl={{
+        antialias: true,
+        alpha: false,
+        powerPreference: "high-performance",
+      }}
     >
       <Scene progressRef={progressRef} />
     </Canvas>

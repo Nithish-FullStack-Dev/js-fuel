@@ -6,27 +6,43 @@ const MODEL_PATH = "/models/js-fuel-station.glb";
 
 export function StationModel() {
   const { scene } = useGLTF(MODEL_PATH);
+
   const cloned = useMemo(() => scene.clone(true), [scene]);
 
   useEffect(() => {
     cloned.traverse((object) => {
       if (!(object instanceof THREE.Mesh)) return;
+
       object.castShadow = false;
       object.receiveShadow = false;
+
       const materials = Array.isArray(object.material)
         ? object.material
         : [object.material];
+
       materials.forEach((material) => {
-        if (!material || !("roughness" in material)) return;
+        if (
+          !material ||
+          !("roughness" in material) ||
+          !("metalness" in material)
+        ) {
+          return;
+        }
+
         const standard = material as THREE.MeshStandardMaterial;
-        standard.roughness = Math.min(
+
+        standard.roughness = THREE.MathUtils.clamp(
+          standard.roughness ?? 0.65,
+          0.3,
           0.9,
-          Math.max(0.3, standard.roughness ?? 0.65),
         );
-        standard.metalness = Math.min(
+
+        standard.metalness = THREE.MathUtils.clamp(
+          standard.metalness ?? 0.08,
+          0.02,
           0.5,
-          Math.max(0.02, standard.metalness ?? 0.08),
         );
+
         standard.needsUpdate = true;
       });
     });
