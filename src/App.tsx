@@ -8,6 +8,7 @@ import { BrandMark } from "./components/BrandMark";
 import { StationExperience } from "./components/StationExperience";
 import { PumpExperience } from "./components/PumpExperience";
 import FuelVideo from "./sections/FuelVideo";
+import FuelCarousel from "./components/FuelCarousel";
 
 export default function App() {
   const { scrollYProgress } = useScroll();
@@ -46,6 +47,7 @@ export default function App() {
         <FuelBridgeSection />
         <FuelVideo />
         <PumpExperience />
+        <FuelCarousel />
         <NetworkSection />
         <FooterSection />
       </main>
