@@ -18,7 +18,7 @@ export const MenuToggle = forwardRef<HTMLButtonElement, MenuToggleProps>(
         aria-expanded={open}
         aria-controls={controlsId}
         data-menu-focusable
-        className="pointer-events-auto relative grid size-11 place-items-center rounded-full transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current motion-reduce:transition-none"
+        className="pointer-events-auto relative grid size-11 place-items-center rounded-full transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current motion-reduce:transition-none bg-red-500 "
         style={{
           color: "white",
           transitionDelay: open ? "120ms" : "350ms",

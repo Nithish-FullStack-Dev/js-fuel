@@ -8,9 +8,13 @@ const MODEL_PATH = "/models/js-fuel-dispenser.glb";
 
 type DispenserModelProps = {
   progressRef: MutableRefObject<number>;
+  mode?: "desktop" | "mobile";
 };
 
-export function DispenserModel({ progressRef }: DispenserModelProps) {
+export function DispenserModel({
+  progressRef,
+  mode = "desktop",
+}: DispenserModelProps) {
   const { scene } = useGLTF(MODEL_PATH);
 
   const group = useRef<THREE.Group>(null);
@@ -30,7 +34,7 @@ export function DispenserModel({ progressRef }: DispenserModelProps) {
 
     const center = box.getCenter(new THREE.Vector3());
 
-    const targetHeight = 5.7;
+    const targetHeight = mode === "mobile" ? 5.1 : 5.7;
 
     const scale = targetHeight / Math.max(size.y, 0.001);
 
@@ -38,7 +42,7 @@ export function DispenserModel({ progressRef }: DispenserModelProps) {
       center,
       scale,
     };
-  }, [cloned]);
+  }, [cloned, mode]);
 
   useEffect(() => {
     cloned.traverse((object) => {
@@ -80,12 +84,17 @@ export function DispenserModel({ progressRef }: DispenserModelProps) {
 
     const progress = progressRef.current;
 
-    const transition = THREE.MathUtils.smoothstep(progress, 0.42, 0.72);
+    const transition = THREE.MathUtils.smoothstep(
+      progress,
+      mode === "mobile" ? 0.33 : 0.42,
+      mode === "mobile" ? 0.64 : 0.72,
+    );
 
     const time = clock.getElapsedTime();
 
     const firstRotationY = -0.08;
-    const secondRotationY = -0.52;
+
+    const secondRotationY = mode === "mobile" ? -0.46 : -0.52;
 
     const targetRotationY = THREE.MathUtils.lerp(
       firstRotationY,
@@ -93,9 +102,17 @@ export function DispenserModel({ progressRef }: DispenserModelProps) {
       transition,
     );
 
-    const targetRotationX = THREE.MathUtils.lerp(0, -0.025, transition);
+    const targetRotationX = THREE.MathUtils.lerp(
+      0,
+      mode === "mobile" ? -0.015 : -0.025,
+      transition,
+    );
 
-    const targetRotationZ = THREE.MathUtils.lerp(0, 0.012, transition);
+    const targetRotationZ = THREE.MathUtils.lerp(
+      0,
+      mode === "mobile" ? 0 : 0.012,
+      transition,
+    );
 
     currentRotationY.current = THREE.MathUtils.damp(
       currentRotationY.current,
@@ -118,20 +135,27 @@ export function DispenserModel({ progressRef }: DispenserModelProps) {
       delta,
     );
 
+    const movementTilt =
+      mode === "mobile"
+        ? Math.sin(Math.min(1, Math.max(0, transition)) * Math.PI) * 0.035
+        : 0;
+
     const idleStrength = THREE.MathUtils.lerp(1, 0.55, transition);
 
     group.current.rotation.y =
-      currentRotationY.current + Math.sin(time * 0.45) * 0.018 * idleStrength;
+      currentRotationY.current + Math.sin(time * 0.45) * 0.016 * idleStrength;
 
     group.current.rotation.x =
-      currentRotationX.current + Math.sin(time * 0.6) * 0.004 * idleStrength;
+      currentRotationX.current + Math.sin(time * 0.6) * 0.0035 * idleStrength;
 
     group.current.rotation.z =
-      currentRotationZ.current + Math.sin(time * 0.38) * 0.002 * idleStrength;
+      currentRotationZ.current +
+      movementTilt +
+      Math.sin(time * 0.38) * 0.0018 * idleStrength;
 
-    group.current.position.y = Math.sin(time * 0.7) * 0.022 * idleStrength;
+    group.current.position.y = Math.sin(time * 0.7) * 0.018 * idleStrength;
 
-    group.current.position.x = Math.sin(time * 0.42) * 0.009 * idleStrength;
+    group.current.position.x = Math.sin(time * 0.42) * 0.007 * idleStrength;
   });
 
   return (

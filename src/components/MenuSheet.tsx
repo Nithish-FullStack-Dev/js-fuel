@@ -72,7 +72,7 @@ const SheetLink = forwardRef<HTMLAnchorElement, SheetLinkProps>(
             onClick={onNavigate}
             aria-current={isActive ? "page" : undefined}
             data-menu-focusable
-            className="block py-[0.05em] text-[clamp(3.25rem,8vw,5.75rem)] uppercase leading-[0.95] text-white transition-colors duration-300 hover:text-[var(--menu-accent)] focus-visible:text-[var(--menu-accent)] focus-visible:outline-none"
+            className="block py-[0.05em] text-[clamp(3.25rem,8vw,5.75rem)] uppercase leading-[0.95] text-white transition-colors duration-300 hover:text-(--menu-accent) focus-visible:text-(--menu-accent) focus-visible:outline-none"
           >
             {label}
           </Link>
@@ -127,7 +127,7 @@ function SheetPanel({
         aria-modal="true"
         aria-label="Site menu"
         style={sheetStyle}
-        className="absolute inset-y-0 right-0 w-full overflow-hidden md:w-[var(--sheet-width)]"
+        className="absolute inset-y-0 right-0 w-full overflow-hidden md:w-(--sheet-width)"
       >
         {SHEET_LAYER_COLORS.map((color, index) => (
           <SheetLayer

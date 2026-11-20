@@ -18,14 +18,21 @@ type Shot = {
 
 const INTRO_DURATION = 4.2;
 
-const INTRO_SHOT: Shot = {
+const desktopIntroShot: Shot = {
   p: 0,
   position: [0, 15.5, 24.5],
   target: [0, -2.2, 0.4],
   fov: 48,
 };
 
-const shots: Shot[] = [
+const mobileIntroShot: Shot = {
+  p: 0,
+  position: [0, 13.5, 31],
+  target: [0, -1.7, 0.5],
+  fov: 58,
+};
+
+const desktopShots: Shot[] = [
   {
     p: 0,
     position: [0, 1.18, 20.5],
@@ -88,13 +95,68 @@ const shots: Shot[] = [
   },
 ];
 
-const shotPositions = shots.map((shot) => new THREE.Vector3(...shot.position));
-
-const shotTargets = shots.map((shot) => new THREE.Vector3(...shot.target));
-
-const introPosition = new THREE.Vector3(...INTRO_SHOT.position);
-
-const introTarget = new THREE.Vector3(...INTRO_SHOT.target);
+const mobileShots: Shot[] = [
+  {
+    p: 0,
+    position: [0, 1.6, 27],
+    target: [0, -0.65, 0.5],
+    fov: 54,
+  },
+  {
+    p: 0.06,
+    position: [0, 1.6, 27],
+    target: [0, -0.65, 0.5],
+    fov: 54,
+  },
+  {
+    p: 0.12,
+    position: [-2.4, 0.25, 10.7],
+    target: [-2.3, -0.9, 2.1],
+    fov: 48,
+  },
+  {
+    p: 0.3,
+    position: [-2.4, 0.25, 10.7],
+    target: [-2.3, -0.9, 2.1],
+    fov: 48,
+  },
+  {
+    p: 0.36,
+    position: [-0.85, 0.25, 10.7],
+    target: [-0.55, -0.9, 2.1],
+    fov: 48,
+  },
+  {
+    p: 0.54,
+    position: [-0.85, 0.25, 10.7],
+    target: [-0.55, -0.9, 2.1],
+    fov: 48,
+  },
+  {
+    p: 0.6,
+    position: [0.85, 0.25, 10.7],
+    target: [0.55, -0.9, 2.1],
+    fov: 48,
+  },
+  {
+    p: 0.78,
+    position: [0.85, 0.25, 10.7],
+    target: [0.55, -0.9, 2.1],
+    fov: 48,
+  },
+  {
+    p: 0.84,
+    position: [2.4, 0.25, 10.7],
+    target: [2.3, -0.9, 2.1],
+    fov: 48,
+  },
+  {
+    p: 1,
+    position: [2.4, 0.25, 10.7],
+    target: [2.3, -0.9, 2.1],
+    fov: 48,
+  },
+];
 
 function clamp01(value: number) {
   return THREE.MathUtils.clamp(value, 0, 1);
@@ -112,6 +174,7 @@ function smootherstep(value: number) {
 
 function interpolateShot(
   progress: number,
+  shots: Shot[],
   position: THREE.Vector3,
   target: THREE.Vector3,
 ) {
@@ -133,9 +196,9 @@ function interpolateShot(
 
   const t = smoothstep((p - from.p) / duration);
 
-  position.copy(shotPositions[index]).lerp(shotPositions[index + 1], t);
+  position.set(...from.position).lerp(new THREE.Vector3(...to.position), t);
 
-  target.copy(shotTargets[index]).lerp(shotTargets[index + 1], t);
+  target.set(...from.target).lerp(new THREE.Vector3(...to.target), t);
 
   return THREE.MathUtils.lerp(from.fov, to.fov, t);
 }
@@ -149,10 +212,31 @@ function CameraRig({ progressRef }: ExperienceCanvasProps) {
 
   const introElapsed = useRef(0);
 
+  const introPosition = useRef(new THREE.Vector3());
+
+  const introTarget = useRef(new THREE.Vector3());
+
   useFrame((_, delta) => {
     const progress = clamp01(progressRef.current);
 
-    const baseFov = interpolateShot(progress, position.current, target.current);
+    const aspect = size.width / Math.max(size.height, 1);
+
+    const isMobile = size.width <= 767;
+
+    const selectedShots = isMobile ? mobileShots : desktopShots;
+
+    const selectedIntro = isMobile ? mobileIntroShot : desktopIntroShot;
+
+    const baseFov = interpolateShot(
+      progress,
+      selectedShots,
+      position.current,
+      target.current,
+    );
+
+    introPosition.current.set(...selectedIntro.position);
+
+    introTarget.current.set(...selectedIntro.target);
 
     introElapsed.current = Math.min(
       introElapsed.current + Math.min(delta, 0.1),
@@ -165,32 +249,31 @@ function CameraRig({ progressRef }: ExperienceCanvasProps) {
 
     const introWeight = (1 - introProgress) * (1 - scrollRelease);
 
-    position.current.lerp(introPosition, introWeight);
+    position.current.lerp(introPosition.current, introWeight);
 
-    target.current.lerp(introTarget, introWeight);
+    target.current.lerp(introTarget.current, introWeight);
 
-    const animatedFov = THREE.MathUtils.lerp(
+    let finalFov = THREE.MathUtils.lerp(
       baseFov,
-      INTRO_SHOT.fov,
+      selectedIntro.fov,
       introWeight,
     );
 
-    const aspect = size.width / Math.max(size.height, 1);
-
-    const responsiveFov =
-      aspect < 0.8
-        ? Math.min(animatedFov + 17, 72)
-        : aspect < 1.2
-          ? Math.min(animatedFov + 8, 64)
-          : animatedFov;
+    if (!isMobile) {
+      if (aspect < 0.8) {
+        finalFov = Math.min(finalFov + 17, 72);
+      } else if (aspect < 1.2) {
+        finalFov = Math.min(finalFov + 8, 64);
+      }
+    }
 
     camera.position.copy(position.current);
 
     if (
       camera instanceof THREE.PerspectiveCamera &&
-      Math.abs(camera.fov - responsiveFov) > 0.001
+      Math.abs(camera.fov - finalFov) > 0.001
     ) {
-      camera.fov = responsiveFov;
+      camera.fov = finalFov;
       camera.updateProjectionMatrix();
     }
 
@@ -266,8 +349,8 @@ export function ExperienceCanvas({ progressRef }: ExperienceCanvasProps) {
       className="experience-canvas"
       dpr={[1, 1.6]}
       camera={{
-        position: INTRO_SHOT.position,
-        fov: INTRO_SHOT.fov,
+        position: desktopIntroShot.position,
+        fov: desktopIntroShot.fov,
         near: 0.1,
         far: 120,
       }}

@@ -73,11 +73,9 @@ export function StationExperience() {
   useEffect(() => {
     progressRef.current = scrollYProgress.get();
 
-    const unsubscribe = scrollYProgress.on("change", (value) => {
+    return scrollYProgress.on("change", (value) => {
       progressRef.current = value;
     });
-
-    return unsubscribe;
   }, [scrollYProgress]);
 
   return (
@@ -97,7 +95,6 @@ export function StationExperience() {
         <ExperienceCanvas progressRef={progressRef} />
 
         <div className="station-chapter__shade" aria-hidden="true" />
-
         <div className="station-chapter__grain" aria-hidden="true" />
 
         {fuelSteps.map((step) => (

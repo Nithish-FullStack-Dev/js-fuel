@@ -56,27 +56,153 @@ export default function App() {
 }
 
 function FuelBridgeSection() {
+  const container = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.14,
+        delayChildren: 0.08,
+      },
+    },
+  };
+
+  const item = {
+    hidden: {
+      opacity: 0,
+      y: 34,
+      filter: "blur(8px)",
+    },
+    show: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1] as const,
+      },
+    },
+  };
+
+  const line = {
+    hidden: {
+      scaleX: 0,
+      opacity: 0,
+    },
+    show: {
+      scaleX: 1,
+      opacity: 1,
+      transition: {
+        duration: 0.9,
+        ease: [0.22, 1, 0.36, 1] as const,
+      },
+    },
+  };
+
   return (
-    <section className="fuel-bridge" id="network">
-      <div className="fuel-bridge__inner">
-        <div className="fuel-bridge__eyebrow">
-          JS FUEL / ONE FORECOURT. FOUR ENERGY CHOICES.
-        </div>
-        <h2>
-          Fuel for every kind of <span>movement.</span>
-        </h2>
-        <p>
-          Petrol, Diesel, CNG and LPG come together under one recognisable JS
-          Fuel experience — clear, accessible and built around the way people
-          actually move.
-        </p>
-        <div className="fuel-bridge__fuels" aria-label="Fuel types">
-          <span>PETROL</span>
-          <span>DIESEL</span>
-          <span>CNG</span>
-          <span>LPG</span>
-        </div>
+    <section
+      id="network"
+      className="relative isolate overflow-hidden bg-[#07090c] px-5 py-24 text-white sm:px-8 md:py-32 lg:px-16 lg:py-40 xl:px-24"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_35%,rgba(213,25,53,0.16),transparent_34%),radial-gradient(circle_at_20%_90%,rgba(213,25,53,0.08),transparent_30%)]"
+      />
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-20 top-1/2 -translate-y-1/2 select-none font-[Manrope] text-[240px] font-extrabold leading-none tracking-[-0.09em] text-white/[0.025] sm:text-[340px] lg:-right-10 lg:text-[520px]"
+      >
+        JS
       </div>
+
+      <motion.div
+        variants={container}
+        initial="hidden"
+        whileInView="show"
+        viewport={{
+          once: true,
+          amount: 0.3,
+        }}
+        className="relative z-10 mx-auto w-full max-w-[1280px]"
+      >
+        <motion.div
+          variants={item}
+          className="mb-7 flex items-center gap-4 sm:mb-10"
+        >
+          <span className="font-mono text-[9px] font-medium uppercase tracking-[0.24em] text-white/45 sm:text-[10px]">
+            JS FUEL / ONE FORECOURT
+          </span>
+
+          <motion.span
+            variants={line}
+            className="h-px w-14 origin-left bg-[#d51935] sm:w-24"
+          />
+
+          <span className="hidden font-mono text-[9px] font-medium uppercase tracking-[0.24em] text-white/45 sm:inline-block sm:text-[10px]">
+            FOUR ENERGY CHOICES
+          </span>
+        </motion.div>
+
+        <motion.h2
+          variants={item}
+          className="max-w-[1100px] font-[Manrope] text-[clamp(3.4rem,8vw,8.5rem)] font-semibold leading-[0.87] tracking-[-0.07em]"
+        >
+          Fuel for every
+          <br />
+          kind of{" "}
+          <span className="relative inline-block text-[#d51935]">
+            movement.
+            <span
+              aria-hidden="true"
+              className="absolute -bottom-2 left-0 h-[2px] w-full origin-left bg-[#d51935]/40"
+            />
+          </span>
+        </motion.h2>
+
+        <motion.div
+          variants={item}
+          className="mt-10 grid gap-8 border-t border-white/10 pt-7 sm:mt-14 sm:pt-9 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-20"
+        >
+          <p className="max-w-[680px] text-[15px] leading-7 text-white/60 sm:text-[17px] sm:leading-8">
+            Petrol, Diesel, CNG and LPG come together under one recognisable JS
+            Fuel experience — clear, accessible and built around the way people
+            actually move.
+          </p>
+
+          <div className="flex flex-wrap gap-2.5 lg:justify-end">
+            {["PETROL", "DIESEL", "CNG", "LPG"].map((fuel, index) => (
+              <motion.span
+                key={fuel}
+                variants={item}
+                transition={{
+                  delay: index * 0.06,
+                }}
+                className="group relative overflow-hidden rounded-full border border-white/15 bg-white/[0.025] px-4 py-2.5 font-mono text-[9px] font-medium tracking-[0.17em] text-white/55 transition-colors duration-300 hover:border-[#d51935]/70 hover:text-white sm:px-5 sm:py-3 sm:text-[10px]"
+              >
+                <span className="relative z-10">{fuel}</span>
+
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 -translate-x-full bg-[#d51935] transition-transform duration-500 ease-out group-hover:translate-x-0"
+                />
+              </motion.span>
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.div
+          variants={item}
+          className="mt-14 flex items-center gap-4 sm:mt-20"
+        >
+          <span className="h-2 w-2 rounded-full bg-[#d51935]" />
+
+          <span className="font-mono text-[8px] uppercase tracking-[0.22em] text-white/30 sm:text-[9px]">
+            Petrol · Diesel · CNG · LPG
+          </span>
+
+          <span className="h-px flex-1 bg-gradient-to-r from-white/15 to-transparent" />
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

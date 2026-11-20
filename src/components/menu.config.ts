@@ -20,7 +20,7 @@ export const DEFAULT_LINKS: readonly NavLink[] = [
   { label: "Blog", href: "/blog" },
 ];
 
-export const DEFAULT_SHEET_WIDTH = "36rem";
+export const DEFAULT_SHEET_WIDTH = "38rem";
 export const DEFAULT_FOREGROUND = "#0a0a0a";
 
 export const EASE_OUT_EXPO: [number, number, number, number] = [

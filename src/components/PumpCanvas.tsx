@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { AdaptiveDpr, Preload } from "@react-three/drei";
 import * as THREE from "three";
@@ -7,6 +7,7 @@ import { DispenserModel } from "./DispenserModel";
 
 type PumpCanvasProps = {
   progressRef: MutableRefObject<number>;
+  mode?: "desktop" | "mobile";
 };
 
 function PumpEnvironment() {
@@ -42,7 +43,29 @@ function PumpEnvironment() {
   );
 }
 
-function GroundShadow({ progressRef }: PumpCanvasProps) {
+function CameraController({ mode }: { mode: "desktop" | "mobile" }) {
+  const { camera } = useThree();
+
+  useEffect(() => {
+    if (!(camera instanceof THREE.PerspectiveCamera)) {
+      return;
+    }
+
+    if (mode === "mobile") {
+      camera.position.set(0, 0.05, 11.5);
+      camera.fov = 40;
+    } else {
+      camera.position.set(0, 0.05, 10.8);
+      camera.fov = 38;
+    }
+
+    camera.updateProjectionMatrix();
+  }, [camera, mode]);
+
+  return null;
+}
+
+function GroundShadow({ mode }: { mode: "desktop" | "mobile" }) {
   const material = useMemo(
     () =>
       new THREE.MeshBasicMaterial({
@@ -57,16 +80,17 @@ function GroundShadow({ progressRef }: PumpCanvasProps) {
   return (
     <mesh
       rotation={[-Math.PI / 2, 0, 0]}
-      position={[0, -3.02, 0.1]}
-      scale={[1.7, 0.6, 1]}
+      position={[0, mode === "mobile" ? -2.68 : -3.02, 0.1]}
+      scale={mode === "mobile" ? [1.42, 0.52, 1] : [1.7, 0.6, 1]}
     >
       <circleGeometry args={[1.45, 64]} />
+
       <primitive object={material} attach="material" />
     </mesh>
   );
 }
 
-export function PumpCanvas({ progressRef }: PumpCanvasProps) {
+export function PumpCanvas({ progressRef, mode = "desktop" }: PumpCanvasProps) {
   return (
     <Canvas
       className="pump-canvas"
@@ -83,14 +107,18 @@ export function PumpCanvas({ progressRef }: PumpCanvasProps) {
         powerPreference: "high-performance",
       }}
     >
+      <CameraController mode={mode} />
+
       <PumpEnvironment />
 
       <Suspense fallback={null}>
-        <DispenserModel progressRef={progressRef} />
-        <GroundShadow progressRef={progressRef} />
+        <DispenserModel progressRef={progressRef} mode={mode} />
+
+        <GroundShadow mode={mode} />
       </Suspense>
 
       <AdaptiveDpr pixelated />
+
       <Preload all />
     </Canvas>
   );

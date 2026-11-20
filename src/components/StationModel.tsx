@@ -11,7 +11,9 @@ export function StationModel() {
 
   useEffect(() => {
     cloned.traverse((object) => {
-      if (!(object instanceof THREE.Mesh)) return;
+      if (!(object instanceof THREE.Mesh)) {
+        return;
+      }
 
       object.castShadow = false;
       object.receiveShadow = false;
