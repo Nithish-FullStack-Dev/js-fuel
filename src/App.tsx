@@ -21,9 +21,13 @@ export default function App() {
   useEffect(() => {
     const lenis = new Lenis({
       autoRaf: true,
-      anchors: { offset: -72 },
-      wheelMultiplier: 0.82,
+      anchors: {
+        offset: -72,
+      },
+      wheelMultiplier: 1,
       touchMultiplier: 1,
+      lerp: 0.08,
+      smoothWheel: true,
     });
 
     return () => lenis.destroy();
