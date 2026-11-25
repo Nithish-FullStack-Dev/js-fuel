@@ -160,9 +160,9 @@ function MobilePumpExperience() {
   return (
     <div
       ref={wrapperRef}
-      className="relative overflow-hidden bg-[var(--paper)] text-[var(--brown)]"
+      className="relative overflow-hidden bg-(--paper) text-(--brown)"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-[3] h-full">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-3 h-full">
         <motion.div
           style={{
             y: pumpY,
@@ -171,32 +171,32 @@ function MobilePumpExperience() {
           }}
           className="absolute left-1/2 w-[min(88vw,430px)] -translate-x-1/2"
         >
-          <div className="aspect-[4/5] w-full">
+          <div className="aspect-4/5 w-full">
             <PumpCanvas progressRef={progressRef} mode="mobile" />
           </div>
         </motion.div>
       </div>
 
-      <section className="relative z-[2] bg-[radial-gradient(circle_at_50%_55%,rgba(255,255,255,0.94),transparent_38%),linear-gradient(180deg,#f3efea_0%,#ebe5de_100%)] px-5 pt-16 pb-8 sm:px-8 sm:pt-20">
+      <section className="relative z-2 bg-[radial-gradient(circle_at_50%_55%,rgba(255,255,255,0.94),transparent_38%),linear-gradient(180deg,#f3efea_0%,#ebe5de_100%)] px-5 pt-16 pb-8 sm:px-8 sm:pt-20">
         <motion.div
           style={{
             opacity: firstContentOpacity,
             y: firstContentY,
             scale: firstContentScale,
           }}
-          className="relative z-[5] mx-auto max-w-[520px] text-center"
+          className="relative z-5 mx-auto max-w-130 text-center"
         >
           <span className="font-['DM_Mono',monospace] text-[9px] font-medium tracking-[0.23em] text-[#2b1d16]/50 uppercase">
             JS FUEL DISPENSER
           </span>
 
-          <h2 className="mt-4 font-['Manrope',sans-serif] text-[clamp(42px,12vw,64px)] leading-[0.91] font-[650] tracking-[-0.065em] text-[#2c1d16]">
+          <h2 className="mt-4 font-['Poppins',sans-serif] text-[clamp(42px,12vw,64px)] leading-[0.91] font-[650] tracking-[-0.065em] text-[#2c1d16]">
             Built for the
             <br />
-            <span className="text-[var(--red)]">open road.</span>
+            <span className="text-(--red)">open road.</span>
           </h2>
 
-          <p className="mx-auto mt-5 max-w-[440px] font-['Inter',sans-serif] text-[14px] leading-[1.7] text-[#2b1d16]/65 sm:text-[15px]">
+          <p className="mx-auto mt-5 max-w-110 font-['Inter',sans-serif] text-[14px] leading-[1.7] text-[#2b1d16]/65 sm:text-[15px]">
             A strong brand face, readable interface and accessible nozzle layout
             bring clarity to every refuel. Designed to make each stop simple,
             confident and ready for the next journey.
@@ -206,17 +206,17 @@ function MobilePumpExperience() {
             {firstFeatures.map((feature) => (
               <span
                 key={feature}
-                className="rounded-full border border-[#2b1d16]/14 bg-white/25 px-3.5 py-2.5 font-['DM_Mono',monospace] text-[7px] font-medium tracking-[0.1em] text-[#2b1d16]/65 uppercase backdrop-blur-sm sm:text-[8px]"
+                className="rounded-full border border-[#2b1d16]/14 bg-white/25 px-3.5 py-2.5 font-['DM_Mono',monospace] text-[7px] font-medium tracking-widest text-[#2b1d16]/65 uppercase backdrop-blur-sm sm:text-[8px]"
               >
                 {feature}
               </span>
             ))}
           </div>
 
-          <div className="mx-auto mt-7 max-w-[430px] border-t border-[#2b1d16]/10 pt-5">
+          <div className="mx-auto mt-7 max-w-107.5 border-t border-[#2b1d16]/10 pt-5">
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <div className="font-['Manrope',sans-serif] text-[21px] font-medium tracking-[-0.05em]">
+                <div className="font-['Poppins',sans-serif] text-[21px] font-medium tracking-tighter">
                   Fast
                 </div>
 
@@ -226,7 +226,7 @@ function MobilePumpExperience() {
               </div>
 
               <div>
-                <div className="font-['Manrope',sans-serif] text-[21px] font-medium tracking-[-0.05em]">
+                <div className="font-['Poppins',sans-serif] text-[21px] font-medium tracking-tighter">
                   Clear
                 </div>
 
@@ -236,7 +236,7 @@ function MobilePumpExperience() {
               </div>
 
               <div>
-                <div className="font-['Manrope',sans-serif] text-[21px] font-medium tracking-[-0.05em]">
+                <div className="font-['Poppins',sans-serif] text-[21px] font-medium tracking-tighter">
                   Ready
                 </div>
 
@@ -250,7 +250,7 @@ function MobilePumpExperience() {
 
         <div
           ref={firstSlotRef}
-          className="mx-auto mt-8 aspect-[4/5] w-[min(88vw,430px)]"
+          className="mx-auto mt-8 aspect-4/5 w-[min(88vw,430px)]"
         />
       </section>
 
@@ -276,7 +276,7 @@ function MobilePumpExperience() {
 
           <motion.h2
             style={{ y: secondTitleY }}
-            className="mt-4 font-['Manrope',sans-serif] text-[clamp(40px,11vw,62px)] leading-[0.91] font-[650] tracking-[-0.065em] text-[#2c1d16]"
+            className="mt-4 font-['Poppins',sans-serif] text-[clamp(40px,11vw,62px)] leading-[0.91] font-[650] tracking-[-0.065em] text-[#2c1d16]"
           >
             Designed from
             <br />
@@ -312,7 +312,7 @@ function MobilePumpExperience() {
           >
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <div className="font-['Manrope',sans-serif] text-[21px] font-medium tracking-[-0.05em]">
+                <div className="font-['Poppins',sans-serif] text-[21px] font-medium tracking-[-0.05em]">
                   Strong
                 </div>
 
@@ -322,7 +322,7 @@ function MobilePumpExperience() {
               </div>
 
               <div>
-                <div className="font-['Manrope',sans-serif] text-[21px] font-medium tracking-[-0.05em]">
+                <div className="font-['Poppins',sans-serif] text-[21px] font-medium tracking-[-0.05em]">
                   Smart
                 </div>
 
@@ -332,7 +332,7 @@ function MobilePumpExperience() {
               </div>
 
               <div>
-                <div className="font-['Manrope',sans-serif] text-[21px] font-medium tracking-[-0.05em]">
+                <div className="font-['Poppins',sans-serif] text-[21px] font-medium tracking-[-0.05em]">
                   Built
                 </div>
 
@@ -483,7 +483,7 @@ function DesktopPumpExperience() {
             JS FUEL DISPENSER
           </span>
 
-          <h2 className="mt-6 font-['Manrope',sans-serif] text-[clamp(52px,5.2vw,92px)] leading-[0.91] font-[650] tracking-[-0.068em] text-[#2c1d16]">
+          <h2 className="mt-6 font-['Poppins',sans-serif] text-[clamp(52px,5.2vw,92px)] leading-[0.91] font-[650] tracking-[-0.068em] text-[#2c1d16]">
             Built for the
             <br />
             <span className="text-[var(--red)]">open road.</span>
@@ -514,7 +514,7 @@ function DesktopPumpExperience() {
                 ["Ready", "To Move"],
               ].map(([title, label]) => (
                 <div key={title}>
-                  <div className="font-['Manrope',sans-serif] text-[30px] font-medium tracking-[-0.055em]">
+                  <div className="font-['Poppins',sans-serif] text-[30px] font-medium tracking-[-0.055em]">
                     {title}
                   </div>
 
@@ -544,7 +544,7 @@ function DesktopPumpExperience() {
 
           <motion.h2
             style={{ y: secondTitleY }}
-            className="mt-6 font-['Manrope',sans-serif] text-[clamp(52px,5.2vw,90px)] leading-[0.91] font-[650] tracking-[-0.068em] text-[#2c1d16]"
+            className="mt-6 font-['Poppins',sans-serif] text-[clamp(52px,5.2vw,90px)] leading-[0.91] font-[650] tracking-[-0.068em] text-[#2c1d16]"
           >
             Designed from
             <br />
@@ -585,7 +585,7 @@ function DesktopPumpExperience() {
                 ["Built", "To Last"],
               ].map(([title, label]) => (
                 <div key={title}>
-                  <div className="font-['Manrope',sans-serif] text-[30px] font-medium tracking-[-0.055em]">
+                  <div className="font-['Poppins',sans-serif] text-[30px] font-medium tracking-[-0.055em]">
                     {title}
                   </div>
 

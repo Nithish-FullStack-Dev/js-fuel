@@ -45,7 +45,7 @@ const FuelVideo = () => {
       <div className="relative z-10 flex w-full flex-col justify-between px-[3%] py-[8%] max-md:px-[5%] max-md:py-12">
         {/* LEFT HEADLINE */}
         <div className="max-w-[520px]">
-          <h1 className="text-[clamp(38px,4vw,78px)] font-light uppercase leading-[0.88] tracking-[-0.045em] text-white">
+          <h1 className="text-[clamp(38px,4vw,78px)] font-light uppercase leading-[0.88] tracking-[-0.045em] text-white font-display">
             POWERING
             <br />
             EVERY JOURNEY.
@@ -65,11 +65,11 @@ const FuelVideo = () => {
                   : ""
               }`}
             >
-              <h2 className="font-serif text-[clamp(30px,2.5vw,50px)] leading-none text-white max-md:text-[28px]">
+              <h2 className="font-display text-[clamp(30px,2.5vw,50px)] leading-none text-white max-md:text-[28px]">
                 {item.title}
               </h2>
 
-              <p className="mt-4 max-w-[520px] text-[14px] leading-relaxed text-white/85 lg:text-[16px] max-md:mt-2 max-md:text-[13px]">
+              <p className="mt-4 max-w-[520px] text-[14px] leading-relaxed text-white/85 lg:text-[16px] max-md:mt-2 max-md:text-[13px] font-mono">
                 {item.description}
               </p>
             </div>

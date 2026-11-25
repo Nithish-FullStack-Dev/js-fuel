@@ -1,7 +1,7 @@
 import type { NavLink } from "./types";
 
 export const MENU_COLORS = {
-  accent: "#969aff",
+  accent: "#c9142f",
   surface: "#242424",
   base: "#1a1a1a",
   onSheet: "#ffffff",

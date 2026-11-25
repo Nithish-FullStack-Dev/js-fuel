@@ -1,10 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-display: "Poppins", sans-serif;
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "Inter", sans-serif;
+}
 
 :root {
   font-family:
@@ -25,6 +32,38 @@
   --paper: #eee9e3;
   --paper-2: #f5f2ed;
   --brown: #271a14;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 }
 
 * {
@@ -42,7 +81,6 @@ body {
   background: var(--ink);
 }
 a {
-  color: inherit;
   text-decoration: none;
 }
 button,
@@ -123,7 +161,7 @@ main {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-family: Manrope, sans-serif;
+  font-family: Inter, sans-serif;
   font-style: italic;
   font-weight: 800;
   font-size: clamp(24px, 3vw, 42px);
@@ -318,9 +356,7 @@ main {
   align-items: center;
   justify-content: start;
   gap: 14px;
-  font:
-    500 10px/1 "DM Mono",
-    monospace;
+  font: 500 10px/1 "Poppins";
   letter-spacing: 0.17em;
   color: rgba(255, 255, 255, 0.56);
 }
@@ -340,9 +376,7 @@ main {
 .fuel-overlay h2 {
   margin: 25px 0 20px;
   max-width: 560px;
-  font:
-    650 clamp(42px, 4.8vw, 76px)/0.96 Manrope,
-    sans-serif;
+  font: 600 clamp(42px, 4.8vw, 76px)/0.96 "Poppins";
   letter-spacing: -0.066em;
   text-wrap: balance;
   text-shadow: 0 20px 50px rgba(0, 0, 0, 0.38);
@@ -362,8 +396,8 @@ main {
   padding-top: 18px;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   font:
-    500 9px/1 "DM Mono",
-    monospace;
+    500 9px/1 Inter,
+    sans-serif;
   letter-spacing: 0.2em;
   color: rgba(255, 255, 255, 0.46);
 }
@@ -386,7 +420,7 @@ main {
   right: -2vw;
   bottom: -7vw;
   font:
-    800 clamp(190px, 35vw, 580px)/0.72 Manrope,
+    800 clamp(190px, 35vw, 580px)/0.72 Inter,
     sans-serif;
   letter-spacing: -0.09em;
   color: rgba(255, 255, 255, 0.045);
@@ -412,7 +446,7 @@ main {
   max-width: 1020px;
   margin: 0;
   font:
-    680 clamp(62px, 8.2vw, 132px)/0.88 Manrope,
+    680 clamp(62px, 8.2vw, 132px)/0.88 Inter,
     sans-serif;
   letter-spacing: -0.072em;
   text-wrap: balance;
@@ -780,7 +814,7 @@ main {
   right: -2vw;
   bottom: -7vw;
   font:
-    800 clamp(190px, 35vw, 580px)/0.72 Manrope,
+    800 clamp(190px, 35vw, 580px)/0.72 Inter,
     sans-serif;
   letter-spacing: -0.09em;
   color: rgba(255, 255, 255, 0.045);
@@ -803,7 +837,7 @@ main {
   max-width: 1020px;
   margin: 0;
   font:
-    680 clamp(62px, 8.2vw, 132px)/0.88 Manrope,
+    680 clamp(62px, 8.2vw, 132px)/0.88 Inter,
     sans-serif;
   letter-spacing: -0.072em;
   text-wrap: balance;
@@ -880,7 +914,7 @@ main {
   right: 1.2vw;
   top: 20vh;
   font:
-    500 clamp(82px, 13.3vw, 214px)/0.82 Manrope,
+    500 clamp(82px, 13.3vw, 214px)/0.82 Inter,
     sans-serif;
   letter-spacing: -0.076em;
   white-space: nowrap;
@@ -920,7 +954,7 @@ main {
 .pump-chapter__detail h2 {
   margin: 24px 0 21px;
   font:
-    650 clamp(48px, 6vw, 92px)/0.91 Manrope,
+    650 clamp(48px, 6vw, 92px)/0.91 Inter,
     sans-serif;
   letter-spacing: -0.066em;
   text-wrap: balance;
@@ -989,7 +1023,7 @@ main {
   margin: 0;
   max-width: 950px;
   font:
-    650 clamp(52px, 6.3vw, 96px)/0.94 Manrope,
+    650 clamp(52px, 6.3vw, 96px)/0.94 Inter,
     sans-serif;
   letter-spacing: -0.065em;
   text-wrap: balance;
@@ -1026,7 +1060,7 @@ main {
 .network-cards h3 {
   margin: 86px 0 13px;
   font:
-    650 clamp(25px, 2vw, 32px)/1 Manrope,
+    650 clamp(25px, 2vw, 32px)/1 Inter,
     sans-serif;
   letter-spacing: -0.04em;
 }
@@ -1141,7 +1175,7 @@ main {
   bottom: -4vw;
   transform: translateX(-50%);
   font:
-    800 clamp(135px, 25vw, 380px)/0.8 Manrope,
+    800 clamp(135px, 25vw, 380px)/0.8 Inter,
     sans-serif;
   letter-spacing: -0.09em;
   color: transparent;
@@ -1194,7 +1228,7 @@ main {
 .loader__percent {
   margin: 12px 0 16px;
   font:
-    700 clamp(64px, 9vw, 128px)/0.85 Manrope,
+    700 clamp(64px, 9vw, 128px)/0.85 Inter,
     sans-serif;
   letter-spacing: -0.07em;
   color: white;
@@ -1409,7 +1443,7 @@ main {
 
 @theme inline {
   --font-heading: var(--font-sans);
-  --font-sans: "Geist Variable", sans-serif;
+  --font-sans: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);

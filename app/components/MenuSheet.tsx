@@ -74,7 +74,7 @@ const SheetLink = forwardRef<HTMLAnchorElement, SheetLinkProps>(
             onClick={onNavigate}
             aria-current={isActive ? "page" : undefined}
             data-menu-focusable
-            className="block py-[0.05em] text-[clamp(3.25rem,8vw,5.75rem)] uppercase leading-[0.95] text-white transition-colors duration-300 hover:text-(--menu-accent) focus-visible:text-(--menu-accent) focus-visible:outline-none"
+            className="block py-[0.05em] text-[clamp(3.25rem,8vw,5.1rem)] uppercase leading-[0.95] text-white transition-colors duration-300 focus-visible:outline-none font-display"
           >
             {label}
           </Link>
@@ -142,9 +142,9 @@ function SheetPanel({
 
         <nav
           aria-label="Primary"
-          className={`relative h-full overflow-y-auto overscroll-contain px-8 pb-10 pt-28 md:px-12 md:pt-32`}
+          className={`relative h-full overflow-y-auto overscroll-contain px-8 pb-20 pt-28 md:px-12 md:pt-32 flex justify-between`}
         >
-          <ul className="flex flex-col">
+          <ul className="flex flex-col gap-5">
             {links.map((link, index) => (
               <SheetLink
                 key={link.href}

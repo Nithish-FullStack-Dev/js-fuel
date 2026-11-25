@@ -116,7 +116,7 @@ function FuelBridgeSection() {
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-20 top-1/2 -translate-y-1/2 select-none font-[Manrope] text-[240px] font-extrabold leading-none tracking-[-0.09em] text-white/[0.025] sm:text-[340px] lg:-right-10 lg:text-[520px]"
+        className="pointer-events-none absolute -right-20 top-1/2 -translate-y-1/2 select-none font-[Poppins] text-[240px] font-extrabold leading-none tracking-[-0.09em] text-white/[0.025] sm:text-[340px] lg:-right-10 lg:text-[520px]"
       >
         JS
       </div>
@@ -151,18 +151,14 @@ function FuelBridgeSection() {
 
         <motion.h2
           variants={item}
-          className="max-w-[1100px] font-[Manrope] text-[clamp(3.4rem,8vw,8.5rem)] font-semibold leading-[0.87] tracking-[-0.07em]"
+          className="max-w-[1100px] font-[Poppins] text-[clamp(3.4rem,8vw,8.5rem)] font-semibold leading-[0.87] tracking-[-0.07em]"
         >
           Fuel for every
           <br />
           kind of{" "}
-          <span className="relative inline-block text-[#d51935]">
+          <motion.span className="relative inline-block text-[#d51935]">
             movement.
-            <span
-              aria-hidden="true"
-              className="absolute -bottom-2 left-0 h-[2px] w-full origin-left bg-[#d51935]/40"
-            />
-          </span>
+          </motion.span>
         </motion.h2>
 
         <motion.div
